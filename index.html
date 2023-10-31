@@ -1,100 +1,136 @@
 <!DOCTYPE html>
-<html lang="en" class="w-full h-full">
-  <head>
+<html lang="en" class="h-fit w-fit">
+
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Contrast Ratio Checker Extension</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="style.css" />
-  </head>
 
-  <body class="w-full h-full m-0">
-    <div
-      id="extension-wrapper"
-      class="bg-neutral-50 w-72 flex flex-col border rounded-b-2xl"
-    >
-      <div
-        id="color-pickers"
-        class="flex flex-row items-center justify-between p-8"
-      >
-        <div id="color-1">
-          <div
-            class="w-14 h-14 rounded-full border border-stone-300 hover:cursor-pointer"
-          ></div>
+    <script src="packages/tailwind-3.3.3.js"></script>
 
-          <label>Color 1</label>
+    <link rel="stylesheet" href="assets/material-icons/material-icons.css" />
+    <link rel="stylesheet" href="components/toast/toast.css" />
+    <link rel="stylesheet" href="components/tooltip/tooltip.css" />
+    <link rel="stylesheet" href="assets/style.css" />
+</head>
+
+<body class="h-fit w-fit m-0">
+    <div id="extension-wrapper" class="bg-neutral-50 w-72 flex flex-col border">
+        <div id="color-pickers" class="flex flex-row items-center justify-between py-4 px-8">
+            <div id="color-1" class="flex flex-col items-center gap-2">
+                <div class="w-14 h-14 rounded-full border border-stone-300 hover:cursor-pointer bg-white"></div>
+
+                <label class="flex flex-row items-center gap-2">
+                    <span>Color 1</span>
+
+                    <button class="material-icons text-base text-stone-500 hover:text-blue-400 transition-all">
+                        content_copy
+                    </button>
+                </label>
+            </div>
+
+            <div id="result" class="text-2xl font-medium text-stone-500">
+                1.00
+            </div>
+
+            <div id="color-2" class="flex flex-col items-center gap-2">
+                <div class="w-14 h-14 rounded-full border border-stone-300 hover:cursor-pointer bg-white"></div>
+
+                <label class="flex flex-row items-center gap-2">
+                    <span>Color 2</span>
+
+                    <button class="material-icons text-base text-stone-500 hover:text-blue-400 transition-all">
+                        content_copy
+                    </button>
+                </label>
+            </div>
         </div>
 
-        <div id="result" class="text-2xl font-medium text-stone-500">1.00</div>
+        <div id="tab-header" class="group flex flex-row px-8 items-center justify-between hover:cursor-pointer">
+            <p class="text-left font-medium py-2 group-hover:text-blue-400">
+                Settings
+            </p>
 
-        <div id="color-2">
-          <div
-            class="w-14 h-14 rounded-full border border-stone-300 hover:cursor-pointer"
-          ></div>
-
-          <label>Color 2</label>
-        </div>
-      </div>
-
-      <div id="validation" class="flex flex-col p-8 w-full box-border gap-2">
-        <div class="flex flex-row justify-between w-full">
-          <label class="w-full">Custom</label>
-
-          <input
-            type="number"
-            class="w-full rounded-lg border focus-visible:outline focus-visible:outline-1 focus-visible:outline-stone-300 transition-all"
-          />
+            <button class="material-icons group-hover:text-blue-400">
+                expand_more
+            </button>
         </div>
 
-        <div class="flex flex-row justify-between w-full">
-          <label class="w-full">Font size</label>
+        <div id="inputs-wrapper"
+            class="box-border overflow-hidden max-h-0 h-fit border-b border-stone-150 transition-all duration-500 ease-in-out">
+            <div id="inputs" class="border-y py-4 px-8 flex flex-col gap-1">
+                <div class="flex flex-row items-center justify-between w-full pb-1">
+                    <span>Bold text</span>
 
-          <input
-            type="number"
-            class="w-full rounded-lg border focus-visible:outline focus-visible:outline-1 focus-visible:outline-stone-300 transition-all"
-          />
+                    <input id="bold" type="checkbox" class="hover:cursor-pointer" />
+                </div>
+
+                <div class="flex flex-row items-center justify-between w-full">
+                    <label class="w-full flex flex-row gap-1 items-center">
+                        <span>Font size</span>
+
+                        <button tooltip="By default value applied is 16px." tooltip-width="150px"
+                            tooltip-font-family="Poppins" class="material-icons text-lg items-center text-stone-300">
+                            info
+                        </button>
+                    </label>
+
+                    <input id="font-size" type="number"
+                        class="w-full rounded-lg border p-1 focus-visible:outline focus-visible:outline-1 focus-visible:outline-stone-300 transition-all" />
+                </div>
+
+                <div class="flex flex-row items-center justify-between w-full">
+                    <label class="w-full">Custom ratio</label>
+
+                    <input id="custom-ratio" type="number"
+                        class="w-full rounded-lg border p-1 focus-visible:outline focus-visible:outline-1 focus-visible:outline-stone-300 transition-all" />
+                </div>
+            </div>
         </div>
 
-        <div class="flex flex-row justify-between w-full">
-          <span>Bold text</span>
+        <div id="validation" class="flex flex-col py-4 px-8 w-full box-border gap-2">
+            <div class="flex flex-row items-center justify-between items-center w-full">
+                <label class="w-full">WCAG 2.0 AAA</label>
 
-          <input type="checkbox" />
+                <div id="wcag-aaa" class="flex flex-row justify-end items-center gap-2 w-full">
+                    <span class="w-5 h-5 bg-stone-400 rounded-full"></span>
+
+                    <data class="text-stone-500">N/A</data>
+                </div>
+            </div>
+
+            <div class="flex flex-row items-center justify-between w-full">
+                <label class="w-full">WCAG 2.0 AA</label>
+
+                <div id="wcag-aa" class="flex flex-row justify-end items-center gap-2 w-full">
+                    <span class="w-5 h-5 bg-stone-400 rounded-full"></span>
+
+                    <data class="text-stone-500">N/A</data>
+                </div>
+            </div>
+
+            <div class="flex flex-row items-center justify-between w-full">
+                <label class="w-full">Custom</label>
+
+                <div id="custom" class="flex flex-row justify-end items-center gap-2 w-full">
+                    <span class="w-5 h-5 bg-stone-400 rounded-full"></span>
+
+                    <data class="text-stone-500">N/A</data>
+                </div>
+            </div>
         </div>
-
-        <div class="flex flex-row justify-between items-center w-full">
-          <label class="w-full">WCAG 2.0 AAA</label>
-
-          <div class="flex flex-row justify-end items-center gap-2 w-full">
-            <span class="w-5 h-5 bg-green-400 rounded-full"></span>
-
-            <data class="text-stone-500">True</data>
-          </div>
-        </div>
-
-        <div class="flex flex-row justify-between w-full">
-          <label class="w-full">WCAG 2.0 AA</label>
-
-          <div class="flex flex-row justify-end items-center gap-2 w-full">
-            <span class="w-5 h-5 bg-green-400 rounded-full"></span>
-
-            <data class="text-stone-500">True</data>
-          </div>
-        </div>
-
-        <div class="flex flex-row justify-between w-full">
-          <label class="w-full">Custom</label>
-
-          <div class="flex flex-row justify-end items-center gap-2 w-full">
-            <span class="w-5 h-5 bg-stone-400 rounded-full"></span>
-
-            <data class="text-stone-500">N/A</data>
-          </div>
-        </div>
-      </div>
     </div>
-  </body>
+</body>
 
-  <script src="https://unpkg.com/contrast-ratio-checker@1.1.7/dist/index.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-  <script type="module" src="script.js"></script>
+<script src="./packages/contrast-ratio-checker.js"></script>
+<script src="./packages/jquery.min.js"></script>
+
+<script type="text/javascript" src="components/toast/toast.js"></script>
+<script type="text/javascript" src="components/tooltip/tooltip.js"></script>
+<script type="text/javascript" src="utils/color.util.js"></script>
+<script type="text/javascript" src="utils/validator.util.js"></script>
+<script type="text/javascript" src="script.js"></script>
+<script type="text/javascript" src="watchers.js"></script>
+
 </html>

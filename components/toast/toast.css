@@ -1,0 +1,19 @@
+@keyframes fadeInBottomToTop {
+    0% {
+        bottom: -50%;
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOutTopToBottom {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 1;
+        bottom: -50%;
+    }
+}
